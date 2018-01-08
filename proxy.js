@@ -705,7 +705,19 @@ function handlePoolMessage(jsonData, hostname){
 
 function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
-    console.log(`Received new block template from ${pool.hostname}`);
+    function pad(number) {
+      if (number < 10) {
+        return '0' + number;
+      }
+      return number;
+    }
+    function curr_date() {
+      let time_now = new Date(Date.now());
+      return       pad(time_now.getUTCMinutes()) +
+             ':' + pad(time_now.getUTCSeconds()) +
+             '.' + (time_now.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5);
+    };
+    console.log(`Received new block template ` + blockTemplate.height + ` from ${pool.hostname} (` + curr_date() + ')');
     if(pool.activeBlocktemplate){
         if (pool.activeBlocktemplate.job_id === blockTemplate.job_id){
             debug.pool('No update with this job, it is an upstream dupe');
